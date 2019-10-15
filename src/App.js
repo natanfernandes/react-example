@@ -1,24 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { request } from './api';
 import './App.css';
 
 function App() {
+  const [count, setCount] = useState(0);
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
+    async function fetch() {
+      const response = await request();
+      console.log(response);
+      setUsuario(response);
+    }
+    fetch();
+  }, []);
+
+  useEffect(() => {
+    console.log("mudou");
+  }, [count]);
+
+  function aumentar() {
+    setCount(count + 1);
+  }
+
+  function diminuir() {
+    setCount(count - 1);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>{count}</p>
+      <button onClick={() => diminuir()}>-</button>
+      <button onClick={() => aumentar()}>+</button>
+      {usuario ? (
+        <p>{usuario.title}</p>
+      ) : null}
     </div>
   );
 }
